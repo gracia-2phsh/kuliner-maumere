@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Pesanan - Maumere Delivery</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef7fc;
+            margin: 0;
+            padding: 15px;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.08);
+            box-sizing: border-box;
+        }
+        h2 {
+            color: #0284c7;
+            text-align: center;
+            font-size: 20px;
+            margin-top: 0;
+        }
+        .card-ringkasan {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            background: #f8fafc;
+        }
+        .btn-lanjut {
+            background-color: #fef08a;
+            color: #1e293b;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 20px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🛍️ Konfirmasi Akhir Pesanan</h2>
+
+    <div class="card-ringkasan" id="infoProdukCheckout">
+        <!-- Data produk dimuat otomatis -->
+    </div>
+
+    <form onsubmit="lanjutKeRoomChat(event)">
+        <div class="form-group">
+            <label>Alamat Pengantaran di Maumere:</label>
+            <textarea id="alamatPenerima" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Catatan untuk Penjual (Opsional):</label>
+            <input type="text" id="catatanMenu" placeholder="Contoh: Jangan terlalu pedas">
+        </div>
+        <button type="submit" class="btn-lanjut">Konfirmasi & Masuk ke Room Chat Toko ➔</button>
+    </form>
+</div>
+
+<script>
+    let namaMenuGlobal = "";
+    let hargaMenuGlobal = 0;
+    let tokoGlobal = "";
+
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        namaMenuGlobal = params.get('nama') || 'Kuliner Maumere';
+        hargaMenuGlobal = parseInt(params.get('harga')) || 0;
+        tokoGlobal = params.get('toko') || 'Toko Lokal Maumere';
+        let deskripsi = params.get('deskripsi') || '';
+
+        const dataUser = JSON.parse(localStorage.getItem('userTerdaftar')) || {};
+        document.getElementById('alamatPenerima').value = dataUser.alamat || 'Jl. El Tari, Maumere';
+
+        document.getElementById('infoProdukCheckout').innerHTML = `
+            <strong>${namaMenuGlobal}</strong><br>
+            <small style="color: #64748b;">${deskripsi}</small><br>
+            <div style="margin-top: 6px; color: #0284c7; font-weight: bold;">Total: Rp ${hargaMenuGlobal.toLocaleString('id-ID')}</div>
+            <small>📍 Penjual: ${tokoGlobal}</small>
+        `;
+    };
+
+    function lanjutKeRoomChat(e) {
+        e.preventDefault();
+        let alamat = document.getElementById('alamatPenerima').value;
+        let catatan = document.getElementById('catatanMenu').value;
+
+        // Arahkan ke halaman chat dengan membawa data pesanan melalui URL
+        const urlChat = `chat_toko.html?nama=${encodeURIComponent(namaMenuGlobal)}&harga=${hargaMenuGlobal}&toko=${encodeURIComponent(tokoGlobal)}&alamat=${encodeURIComponent(alamat)}&catatan=${encodeURIComponent(catatan)}`;
+        window.location.href = urlChat;
+    }
+</script>
+
+</body>
+</html>

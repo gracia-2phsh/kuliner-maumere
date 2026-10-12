@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuliner Delivery Maumere</title>
+    <style>
+        :root {
+            --baby-blue-bg: #eef7fc;
+            --butter-yellow: #fef08a;
+            --butter-yellow-hover: #fde047;
+            --primary-accent: #0284c7;
+            --dark-text: #1e293b;
+            --shadow-soft: 0 8px 20px rgba(2, 132, 199, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--baby-blue-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--dark-text);
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 18px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            box-shadow: 0 0 25px rgba(0,0,0,0.05);
+            animation: fadeInPage 0.4s ease-in-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2, h3 {
+            color: var(--primary-accent);
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        #mapMaumere {
+            width: 100%;
+            height: 150px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            border: 2px solid #bae6fd;
+            background-color: #e0f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 13px;
+            color: #0369a1;
+        }
+
+        .search-box {
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            box-sizing: border-box;
+            border: 2px solid #bae6fd;
+            background-color: #f0f9ff;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 20px;
+        }
+        .carousel-slide {
+            display: flex;
+            width: 300%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-slide img {
+            width: 33.333%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .category-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+        .category-item {
+            flex: 0 0 auto;
+            background: var(--butter-yellow);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            transition: transform 0.15s ease;
+        }
+        .category-item:active {
+            transform: scale(0.92);
+        }
+        .category-item.active {
+            background-color: var(--primary-accent);
+            color: #ffffff;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border: 1px solid #e0f2fe;
+            border-radius: 18px;
+            overflow: hidden;
+            margin-bottom: 18px;
+            padding: 12px;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+        .product-card:active {
+            transform: scale(0.97);
+        }
+        .product-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+        .product-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+        }
+        .store-address {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price {
+            font-weight: bold;
+            color: var(--primary-accent);
+            font-size: 17px;
+        }
+        .btn-pesan {
+            background-color: var(--butter-yellow);
+            color: var(--dark-text);
+            border: none;
+            padding: 9px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeInPage 0.3s ease-in-out; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            z-index: 1000;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            cursor: pointer;
+            flex-grow: 1;
+            background: none;
+            border: none;
+            transition: transform 0.15s ease;
+        }
+        .nav-item:active {
+            transform: scale(0.85);
+        }
+        .nav-item.active {
+            color: var(--primary-accent);
+            font-weight: bold;
+        }
+        .nav-item span {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+        .card-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        .wallet-card {
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            color: white;
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+        }
+        .wallet-balance {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .btn-wallet {
+            background: var(--butter-yellow);
+            color: var(--dark-text);
+            border: none;
+            padding: 7px 14px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- TAB 1: BERANDA -->
+    <div id="tabBeranda" class="tab-content active">
+        <h2>🛵 Kuliner Maumere</h2>
+        <div id="mapMaumere">📍 Peta Area Maumere (-8.6277, 122.2172)</div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Cari makanan atau toko di Maumere..." onkeyup="cariProduk()">
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-slide" id="carouselSlide">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600" alt="Promo">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600" alt="Bebas Ongkir">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600" alt="Kuliner">
+            </div>
+        </div>
+
+        <div class="category-title">Kategori Pilihan</div>
+        <div class="category-container">
+            <div class="category-item active" onclick="filterKategori('semua', this)">🍽️ Semua</div>
+            <div class="category-item" onclick="filterKategori('makanan', this)">🍜 Makanan Heavy</div>
+            <div class="category-item" onclick="filterKategori('minuman', this)">🧋 Minuman</div>
+            <div class="category-item" onclick="filterKategori('camilan', this)">🍟 Camilan</div>
+        </div>
+
+        <div id="daftarProduk">
+            <div class="product-card" data-keyword="ikan bakar maumere" data-kategori="makanan">
+                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500" alt="Ikan Bakar">
+                <div class="product-info">
+                    <h4>Ikan Bakar Patin Maumere</h4>
+                    <div class="store-address">📍 Jl. El Tari, Maumere</div>
+                    <p class="product-desc">Ikan segar tangkapan laut Flores dengan sambal khas Maumere.</p>
+                    <div class="price-row">
+                        <span class="price">Rp 45,000</span>
+                        <button class="btn-pesan" onclick="cekLoginSebelumPesan('Ikan Bakar Patin Maumere', 45000, 'Jl. El Tari, Maumere', 'Ikan segar khas Flores', 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500', 'Warung Laut Maumere')">Pesan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="produkDynamic"></div>
+    </div>
+
+    <!-- TAB 2: PEMESANAN -->
+    <div id="tabPemesanan" class="tab-content">
+        <h3>📦 Riwayat Pemesanan</h3>
+        <div class="card-box">
+            <strong>Status: Dalam Perjalanan Kurir</strong><br>
+            <small>Menuju titik koordinat alamatmu di Maumere.</small>
+        </div>
+    </div>
+
+    <!-- TAB 3: CHAT -->
+    <div id="tabChat" class="tab-content">
+        <h3>💬 Percakapan Toko</h3>
+        <div id="daftarChatContainer"></div>
+    </div>
+
+    <!-- TAB 4: AKUN USER (Murni Informasi Profil Pembeli) -->
+    <div id="tabAkun" class="tab-content">
+        <h3>👤 Akun & Dompet Digital</h3>
+        
+        <div class="wallet-card">
+            <h4 style="margin: 0 0 5px 0; opacity: 0.9;">Saldo Dompet KulinerPay</h4>
+            <div class="wallet-balance" id="saldoWallet">Rp 150,000</div>
+            <button class="btn-wallet" onclick="topUpSaldo()">+ Top-Up Saldo</button>
+        </div>
+
+        <div class="card-box">
+            <strong>Profil Pengguna</strong><br>
+            <p id="infoProfilUser" style="margin: 5px 0 0 0; font-size: 13px; color: #475569;">
+                Memuat data...
+            </p>
+        </div>
+
+        <button style="background: #e2e8f0; color: #334155; border: none; padding: 12px; width: 100%; border-radius: 14px; font-weight: bold; cursor: pointer;" onclick="logoutAkun()">Keluar / Hapus Sesi</button>
+    </div>
+
+</div>
+
+<!-- NAVIGASI BAWAH -->
+<div class="bottom-nav">
+    <button class="nav-item active" onclick="gantiTab('Beranda', event)">
+        <span>🏠</span>Beranda
+    </button>
+    <button class="nav-item" onclick="gantiTab('Pemesanan', event)">
+        <span>📦</span>Pemesanan
+    </button>
+    <button class="nav-item" onclick="gantiTab('Chat', event)">
+        <span>💬</span>Chat
+    </button>
+    <button class="nav-item" onclick="gantiTab('Akun', event)">
+        <span>👤</span>Akun
+    </button>
+</div>
+
+<script>
+    let saldoAktif = 150000;
+
+    let currentSlide = 0;
+    setInterval(() => {
+        const slide = document.getElementById('carouselSlide');
+        if (slide) {
+            currentSlide = (currentSlide + 1) % 3;
+            slide.style.transform = `translateX(-${currentSlide * 33.333}%)`;
+        }
+    }, 3500);
+
+    function filterKategori(kategori, element) {
+        document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+
+        let cards = document.getElementsByClassName('product-card');
+        for (let i = 0; i < cards.length; i++) {
+            let kat = cards[i].getAttribute('data-kategori') || '';
+            if (kategori === 'semua' || kat.includes(kategori)) {
+                cards[i].style.display = "block";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+
+    function gantiTab(namaTab, event) {
+        if (namaTab === 'Akun' || namaTab === 'Chat') {
+            const dataUser = localStorage.getItem('userTerdaftar');
+            if (!dataUser) {
+                alert("Silakan buat akun atau login terlebih dahulu.");
+                window.location.href = 'register.html';
+                return;
+            }
+        }
+
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+        if (namaTab === 'Beranda') document.getElementById('tabBeranda').classList.add('active');
+        else if (namaTab === 'Pemesanan') document.getElementById('tabPemesanan').classList.add('active');
+        else if (namaTab === 'Chat') {
+            document.getElementById('tabChat').classList.add('active');
+            muatDaftarChatBilahBawah();
+        }
+        else if (namaTab === 'Akun') document.getElementById('tabAkun').classList.add('active');
+
+        event.currentTarget.classList.add('active');
+    }
+
+    function muatDaftarChatBilahBawah() {
+        let container = document.getElementById('daftarChatContainer');
+        let semuaChat = JSON.parse(localStorage.getItem('riwayatChatToko')) || [];
+
+        if (semuaChat.length === 0) {
+            container.innerHTML = `<div class="card-box" style="text-align: center; color: #64748b;">Belum ada riwayat chat dengan toko.</div>`;
+            return;
+        }
+
+        container.innerHTML = "";
+        semuaChat.forEach(c => {
+            container.innerHTML += `
+                <div class="card-box" style="cursor: pointer; border-left: 4px solid #0284c7;" onclick="bukaKembaliChat('${c.toko}')">
+                    <strong>💬 Percakapan dengan ${c.toko}</strong><br>
+                    <small style="color: #64748b;">Ketuk untuk melanjutkan percakapan.</small>
+                </div>
+            `;
+        });
+    }
+
+    function bukaKembaliChat(namaToko) {
+        window.location.href = `chat_toko.html?toko=${encodeURIComponent(namaToko)}`;
+    }
+
+    function cekLoginSebelumPesan(nama, harga, alamat, deskripsi, gambar, toko) {
+        const dataUser = localStorage.getItem('userTerdaftar');
+        if (!dataUser) {
+            alert("Silakan login terlebih dahulu untuk memesan.");
+            window.location.href = 'register.html';
+            return;
+        }
+        const url = `checkout.html?nama=${encodeURIComponent(nama)}&harga=${harga}&alamat=${encodeURIComponent(alamat)}&deskripsi=${encodeURIComponent(deskripsi)}&gambar=${encodeURIComponent(gambar)}&toko=${encodeURIComponent(toko)}`;
+        window.location.href = url;
+    }
+
+    function topUpSaldo() {
+        let pin = prompt("Masukkan 6-Digit PIN Keamanan:");
+        if (pin === "123456") {
+            let tambah = parseInt(prompt("Jumlah Top-Up (Rp):"));
+            if (!isNaN(tambah) && tambah > 0) {
+                saldoAktif += tambah;
+                document.getElementById("saldoWallet").innerText = `Rp ${saldoAktif.toLocaleString('id-ID')}`;
+                alert("Top-up berhasil!");
+            }
+        } else if (pin !== null) {
+            alert("PIN Salah!");
+        }
+    }
+
+    function cariProduk() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let cards = document.getElementsByClassName('product-card');
+        for (let i = 0; i < cards.length; i++) {
+            let text = cards[i].innerText.toLowerCase();
+            cards[i].style.display = text.includes(input) ? "block" : "none";
+        }
+    }
+
+    function logoutAkun() {
+        if (confirm("Keluar dari akun?")) {
+            localStorage.removeItem('userTerdaftar');
+            window.location.href = 'index.html';
+        }
+    }
+
+    window.onload = function() {
+        const dataUser = localStorage.getItem('userTerdaftar');
+        if (dataUser) {
+            const userObj = JSON.parse(dataUser);
+            document.getElementById('infoProfilUser').innerHTML = `
+                Nama: ${userObj.nama}<br>
+                Email: ${userObj.email}<br>
+                No HP: ${userObj.noHp}<br>
+                Alamat: ${userObj.alamat}<br>
+                Peran Akun: <span style="color: #0284c7; font-weight: bold;">${userObj.role.toUpperCase()}</span>
+            `;
+        }
+    };
+</script>
+
+</body>
+</html>

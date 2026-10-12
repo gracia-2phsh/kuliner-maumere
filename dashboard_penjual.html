@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Penjual - Kuliner Maumere</title>
+    <style>
+        :root {
+            --baby-blue-bg: #eef7fc;
+            --butter-yellow: #fef08a;
+            --butter-yellow-hover: #fde047;
+            --primary-accent: #0284c7;
+            --dark-text: #1e293b;
+            --shadow-soft: 0 8px 20px rgba(2, 132, 199, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--baby-blue-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--dark-text);
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 18px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            box-shadow: 0 0 25px rgba(0,0,0,0.05);
+            animation: fadeInPage 0.4s ease-in-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2, h3 {
+            color: var(--primary-accent);
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeInPage 0.3s ease-in-out; }
+
+        .card-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        /* Notifikasi Pesanan Masuk */
+        .notification-badge {
+            background: #ef4444;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            float: right;
+        }
+
+        /* Form & Input */
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            background: #f8fafc;
+        }
+
+        .btn-aksi {
+            background-color: var(--butter-yellow);
+            color: var(--dark-text);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            width: 100%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-top: 5px;
+        }
+        .btn-aksi:active {
+            transform: scale(0.97);
+            background-color: var(--butter-yellow-hover);
+        }
+
+        /* Navigasi Bawah 5 Menu khusus Penjual */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            z-index: 1000;
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+        }
+        .nav-item {
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            cursor: pointer;
+            flex-grow: 1;
+            background: none;
+            border: none;
+            transition: transform 0.15s ease;
+        }
+        .nav-item:active {
+            transform: scale(0.85);
+        }
+        .nav-item.active {
+            color: var(--primary-accent);
+            font-weight: bold;
+        }
+        .nav-item span {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- MENU 1: BERANDA PENJUAL -->
+    <div id="tabBerandaPenjual" class="tab-content active">
+        <h2>🏠 Beranda Toko</h2>
+        <div class="card-box" style="background: linear-gradient(135deg, #38bdf8, #0284c7); color: white;">
+            <h4 style="margin: 0 0 5px 0;">Status Toko: Buka 🟢</h4>
+            <p style="margin: 0; font-size: 13px; opacity: 0.9;">Siap melayani pesanan warga di area Maumere.</p>
+        </div>
+        <div class="card-box">
+            <strong>📊 Ringkasan Penjualan Hari Ini</strong><br>
+            <p style="margin: 5px 0 0 0; color: #475569;">
+                - Pesanan Masuk: <strong>1 Pesanan</strong><br>
+                - Pendapatan Escrow: <strong style="color: #0284c7;">Rp 45.000</strong>
+            </p>
+        </div>
+        <div class="card-box" style="text-align: center; background: #fef9c3; border-color: #fde047;">
+            <strong>💡 Ingin Membeli Kuliner Lain?</strong><br>
+            <small style="color: #854d0e;">Penjual juga dapat berbelanja di toko lain.</small><br><br>
+            <button class="btn-aksi" onclick="window.location.href='index.html'" style="background: #ffffff;">Buka Beranda Pembeli ➔</button>
+        </div>
+    </div>
+
+    <!-- MENU 2: PEMESANAN MASUK -->
+    <div id="tabPemesananPenjual" class="tab-content">
+        <h3>📦 Kelola Pesanan Masuk</h3>
+        <div class="card-box">
+            <span class="notification-badge">Baru!</span>
+            <strong>Pesanan #001</strong><br>
+            <small>Menu: Ikan Bakar Patin (Rp 45.000)</small><br>
+            <small>Pemesan: Gracia D'Franco (Jl. El Tari, Maumere)</small><br><br>
+            <button class="btn-aksi" onclick="terimaPesanan()">Proses & Kirim Pesanan</button>
+        </div>
+    </div>
+
+    <!-- MENU 3: PRODUK SAYA -->
+    <div id="tabProdukPenjual" class="tab-content">
+        <h3>🍽️ Daftar Produk Toko Saya</h3>
+        
+        <div class="card-box" style="background: #f0f9ff; border-color: #bae6fd;">
+            <strong>+ Tambah Menu Baru</strong>
+            <form onsubmit="tambahProdukBaru(event)" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label>Nama Menu:</label>
+                    <input type="text" id="namaMenuInput" required placeholder="Contoh: Se'i Sapi Maumere">
+                </div>
+                <div class="form-group">
+                    <label>Harga (Rp):</label>
+                    <input type="number" id="hargaMenuInput" required placeholder="35000">
+                </div>
+                <div class="form-group">
+                    <label>URL Gambar Menu:</label>
+                    <input type="url" id="gambarMenuInput" required placeholder="https://images.unsplash.com/...">
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi Singkat:</label>
+                    <textarea id="deskripsiMenuInput" required placeholder="Daging sapi asap khas NTT..."></textarea>
+                </div>
+                <button type="submit" class="btn-aksi">Simpan & Tayangkan Menu</button>
+            </form>
+        </div>
+
+        <div id="daftarProdukSaya">
+            <!-- Produk yang ditambahkan penjual akan muncul di sini -->
+        </div>
+    </div>
+
+    <!-- MENU 4: CHAT & NOTIFIKASI -->
+    <div id="tabChatPenjual" class="tab-content">
+        <h3>💬 Pesan & Notifikasi Pembeli</h3>
+        <div class="card-box" style="border-left: 4px solid #ef4444;" onclick="bukaRoomChatPenjual()">
+            <span class="notification-badge">1 Pesan</span>
+            <strong>💬 Chat dari Gracia D'Franco</strong><br>
+            <small style="color: #64748b;">"Halo Kak, saya ingin konfirmasi pesanan..."</small><br>
+            <small style="color: #0284c7; font-weight: bold;">Ketuk untuk membalas pesan ➔</small>
+        </div>
+    </div>
+
+    <!-- MENU 5: AKUN PENJUAL -->
+    <div id="tabAkunPenjual" class="tab-content">
+        <h3>👤 Akun Toko Penjual</h3>
+        <div class="card-box" id="infoProfilPenjual">
+            Memuat data profil toko...
+        </div>
+        <button style="background: #e2e8f0; color: #334155; border: none; padding: 12px; width: 100%; border-radius: 14px; font-weight: bold; cursor: pointer;" onclick="logoutPenjual()">Keluar / Tutup Toko</button>
+    </div>
+
+</div>
+
+<!-- NAVIGASI BAWAH 5 MENU KHUSUS PENJUAL -->
+<div class="bottom-nav">
+    <button class="nav-item active" onclick="gantiTabPenjual('BerandaPenjual', event)">
+        <span>🏠</span>Beranda
+    </button>
+    <button class="nav-item" onclick="gantiTabPenjual('PemesananPenjual', event)">
+        <span>📦</span>Pemesanan
+    </button>
+    <button class="nav-item" onclick="gantiTabPenjual('ProdukPenjual', event)">
+        <span>🍽️</span>Produk
+    </button>
+    <button class="nav-item" onclick="gantiTabPenjual('ChatPenjual', event)">
+        <span>💬</span>Chat
+    </button>
+    <button class="nav-item" onclick="gantiTabPenjual('AkunPenjual', event)">
+        <span>👤</span>Akun
+    </button>
+</div>
+
+<script>
+    function gantiTabPenjual(namaTab, event) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+        if (namaTab === 'BerandaPenjual') document.getElementById('tabBerandaPenjual').classList.add('active');
+        else if (namaTab === 'PemesananPenjual') document.getElementById('tabPemesananPenjual').classList.add('active');
+        else if (namaTab === 'ProdukPenjual') {
+            document.getElementById('tabProdukPenjual').classList.add('active');
+            muatProdukSaya();
+        }
+        else if (namaTab === 'ChatPenjual') document.getElementById('tabChatPenjual').classList.add('active');
+        else if (namaTab === 'AkunPenjual') document.getElementById('tabAkunPenjual').classList.add('active');
+
+        event.currentTarget.classList.add('active');
+    }
+
+    function tambahProdukBaru(e) {
+        e.preventDefault();
+        const userObj = JSON.parse(localStorage.getItem('userTerdaftar')) || { nama: "Warung Maumere", alamat: "Maumere" };
+
+        let produkBaru = {
+            namaMenu: document.getElementById('namaMenuInput').value,
+            harga: parseInt(document.getElementById('hargaMenuInput').value),
+            gambar: document.getElementById('gambarMenuInput').value,
+            deskripsi: document.getElementById('deskripsiMenuInput').value,
+            namaToko: userObj.nama,
+            alamat: userObj.alamat
+        };
+
+        let daftarProduk = JSON.parse(localStorage.getItem('produkKuliner')) || [];
+        daftarProduk.push(produkBaru);
+        localStorage.setItem('produkKuliner', JSON.stringify(daftarProduk));
+
+        alert("Produk berhasil ditambahkan dan langsung tampil di beranda pembeli Maumere!");
+        document.getElementById('namaMenuInput').value = "";
+        document.getElementById('hargaMenuInput').value = "";
+        document.getElementById('gambarMenuInput').value = "";
+        document.getElementById('deskripsiMenuInput').value = "";
+        muatProdukSaya();
+    }
+
+    function muatProdukSaya() {
+        let container = document.getElementById('daftarProdukSaya');
+        let daftarProduk = JSON.parse(localStorage.getItem('produkKuliner')) || [];
+        
+        if (daftarProduk.length === 0) {
+            container.innerHTML = `<div class="card-box" style="text-align: center; color: #64748b;">Belum ada produk yang ditambahkan.</div>`;
+            return;
+        }
+
+        container.innerHTML = "";
+        daftarProduk.forEach((p, index) => {
+            container.innerHTML += `
+                <div class="card-box">
+                    <strong>${p.namaMenu}</strong> - Rp ${p.harga.toLocaleString('id-ID')}<br>
+                    <small style="color: #64748b;">${p.deskripsi}</small><br>
+                    <button onclick="hapusProduk(${index})" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-top: 6px;">Hapus Produk</button>
+                </div>
+            `;
+        });
+    }
+
+    function hapusProduk(index) {
+        let daftarProduk = JSON.parse(localStorage.getItem('produkKuliner')) || [];
+        daftarProduk.splice(index, 1);
+        localStorage.setItem('produkKuliner', JSON.stringify(daftarProduk));
+        muatProdukSaya();
+    }
+
+    function terimaPesanan() {
+        alert("✔ Pesanan diproses! Status kurir diperbarui.");
+    }
+
+    function bukaRoomChatPenjual() {
+        window.location.href = 'chat_toko.html?toko=Warung Laut Maumere';
+    }
+
+    function logoutPenjual() {
+        if (confirm("Keluar dari dashboard penjual?")) {
+            localStorage.removeItem('userTerdaftar');
+            window.location.href = 'index.html';
+        }
+    }
+
+    window.onload = function() {
+        const dataUser = JSON.parse(localStorage.getItem('userTerdaftar'));
+        if (dataUser) {
+            document.getElementById('infoProfilPenjual').innerHTML = `
+                <strong>Nama Usaha/Toko:</strong> ${dataUser.nama}<br>
+                <strong>Email:</strong> ${dataUser.email}<br>
+                <strong>No HP/WA:</strong> ${dataUser.noHp}<br>
+                <strong>Alamat Toko:</strong> ${dataUser.alamat}<br>
+                <strong>Peran:</strong> <span style="color: #0284c7; font-weight: bold;">Penjual Terverifikasi</span>
+            `;
+        }
+        muatProdukSaya();
+    };
+</script>
+
+</body>
+</html>

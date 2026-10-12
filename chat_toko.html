@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Chat Penjual - Maumere Delivery</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef7fc;
+            margin: 0;
+            padding: 15px;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.08);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+        .header-chat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #bae6fd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #0284c7;
+            font-size: 18px;
+            margin: 0;
+        }
+        .btn-kembali {
+            background: #e2e8f0;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        .chat-bubble {
+            background: #e0f2fe;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+        textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 13px;
+            resize: none;
+            height: 50px;
+        }
+        .btn-kirim {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-chat">
+        <h2 id="judulTokoChat">💬 Chat Toko</h2>
+        <button class="btn-kembali" onclick="window.location.href='index.html'">Kembali ke Beranda</button>
+    </div>
+
+    <div class="chat-history" id="riwayatChat">
+        <div style="text-align: center; color: #64748b; font-size: 11px; margin-bottom: 10px;">
+            Sistem menyiapkan draf konfirmasi. Tekan tombol Kirim untuk menyimpan ke riwayat Chat utama!
+        </div>
+    </div>
+
+    <div class="chat-input-area">
+        <textarea id="inputPesanOtomatis" placeholder="Ketik pesan..."></textarea>
+        <button class="btn-kirim" onclick="kirimDanSimpanPesan()">Kirim</button>
+    </div>
+</div>
+
+<script>
+    let namaTokoAktif = "Toko Maumere";
+
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const namaMenu = params.get('nama') || 'Menu Kuliner';
+        const hargaMenu = parseInt(params.get('harga')) || 0;
+        namaTokoAktif = params.get('toko') || 'Penjual Maumere';
+        const alamat = params.get('alamat') || 'Maumere';
+        const catatan = params.get('catatan') || '-';
+
+        document.getElementById('judulTokoChat').innerText = `💬 ${namaTokoAktif}`;
+
+        // Draf pesan otomatis dari sistem
+        const drafPesan = `Halo Kak, saya ingin konfirmasi pesanan:\n- Menu: ${namaMenu} (Rp ${hargaMenu.toLocaleString('id-ID')})\n- Alamat: ${alamat}\n- Catatan: ${catatan}\nMohon diproses ya Kak!`;
+        document.getElementById('inputPesanOtomatis').value = drafPesan;
+
+        // Muat riwayat chat yang sudah pernah disimpan sebelumnya jika ada
+         muatRiwayatChatTersimpan();
+    };
+
+    function muatRiwayatChatTersimpan() {
+        let semuaChat = JSON.parse(localStorage.getItem('riwayatChatToko')) || [];
+        let chatTokoIni = semuaChat.find(c => c.toko === namaTokoAktif);
+        
+        if (chatTokoIni && chatTokoIni.pesanHTML) {
+            document.getElementById('riwayatChat').innerHTML = chatTokoIni.pesanHTML;
+        }
+    }
+
+    function kirimDanSimpanPesan() {
+        let pesanVal = document.getElementById('inputPesanOtomatis').value.trim();
+        if (!pesanVal) return;
+
+        let riwayat = document.getElementById('riwayatChat');
+        
+        // Tambahkan gelembung chat pembeli
+        riwayat.innerHTML += `
+            <div class="chat-bubble" style="margin-left: auto; background: #dbeafe;">
+                <b>Kamu:</b><br>${pesanVal.replace(/\n/g, '<br>')}
+            </div>
+        `;
+
+        document.getElementById('inputPesanOtomatis').value = "";
+        riwayat.scrollTop = riwayat.scrollHeight;
+
+        // Simpan ke localStorage agar bisa diakses lewat menu tab "Chat" di beranda
+        simpanKeLocalStorage(riwayat.innerHTML);
+
+        // Simulasi balasan otomatis penjual setelah 1 detik
+        setTimeout(() => {
+            riwayat.innerHTML += `
+                <div class="chat-bubble">
+                    <b>${namaTokoAktif}:</b><br>
+                    Pesanan diterima Kak! Kurir segera meluncur ke lokasi Anda di Maumere. 🛵
+                </div>
+            `;
+            riwayat.scrollTop = riwayat.scrollHeight;
+            simpanKeLocalStorage(riwayat.innerHTML);
+        }, 1000);
+    }
+
+    function simpanKeLocalStorage(htmlKonten) {
+        let semuaChat = JSON.parse(localStorage.getItem('riwayatChatToko')) || [];
+        let index = semuaChat.findIndex(c => c.toko === namaTokoAktif);
+        
+        if (index !== -1) {
+            semuaChat[index].pesanHTML = htmlKonten;
+        } else {
+            semuaChat.push({ toko: namaTokoAktif, pesanHTML: htmlKonten });
+        }
+        localStorage.setItem('riwayatChatToko', JSON.stringify(semuaChat));
+    }
+</script>
+
+</body>
+</html>
